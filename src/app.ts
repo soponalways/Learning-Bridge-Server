@@ -3,11 +3,12 @@ import { auth } from "./lib/auth";
 import { toNodeHandler } from "better-auth/node";
 import cors from "cors";
 import config from "./config";
+import healthRouter from "./routes/health.route";
 const app: Application = express();
 
 app.use(cors({
-    origin: [config.client_url],
-    credentials: true
+  origin: [config.client_url],
+  credentials: true
 }))
 
 
@@ -32,7 +33,7 @@ interface HealthCheckResponse {
 app.get('/health', (req: Request, res: Response): void => {
   try {
     const memory = process.memoryUsage();
-    
+
     const healthData: HealthCheckResponse = {
       status: 'UP',
       timestamp: new Date().toISOString(),
@@ -55,7 +56,9 @@ app.get('/health', (req: Request, res: Response): void => {
 });
 
 
+app.use(healthRouter);
+
 app.get("/", (req: Request, res: Response) => {
-    res.send("Hello, World!");
+  res.send("Hello, World!");
 });
 export default app; 
